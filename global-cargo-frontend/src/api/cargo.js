@@ -11,9 +11,9 @@
 
 import axios from '../pages/axios';
 
-const BASE_URL = '/api/contacts/';
+const BASE_URL = '/api/cargo/';
 
-export const fetchContacts = () => axios.get(BASE_URL);
-export const createContact = (data) => axios.post(BASE_URL, data);
-export const updateContact = (id, data) => axios.put(`${BASE_URL}${id}/`, data);
-export const deleteContact = (id) => axios.delete(`${BASE_URL}${id}/`);
+export const fetchCargo = () => axios.get(BASE_URL);
+export const createCargo = (data) => axios.post(BASE_URL, data);
+export const updateCargo = (id, data) => axios.put(`${BASE_URL}${id}/`, data);
+export const deleteCargo = (id) => axios.delete(`${BASE_URL}${id}/`);
