@@ -9,10 +9,20 @@ import {
   deleteShipment,
 } from '../api/shipments';
 
+// Added API imports for dropdown data
+import { fetchCargo } from '../api/cargo';
+import { fetchShips } from '../api/ships';
+import { fetchPorts } from '../api/port';
+
 const ShipmentManagement = () => {
   const [shipmentItems, setShipmentItems] = useState([]);
   const [user, setUser] = useState(null);
   const [selectedStatusFilter, setSelectedStatusFilter] = useState('');
+
+  // Dropdown data states
+  const [cargoOptions, setCargoOptions] = useState([]);
+  const [shipOptions, setShipOptions] = useState([]);
+  const [portOptions, setPortOptions] = useState([]);
 
   const [formData, setFormData] = useState({
     id: null,
@@ -44,8 +54,24 @@ const ShipmentManagement = () => {
   useEffect(() => {
     if (user) {
       loadShipments();
+      loadDropdownData();  // Load dropdowns after user loads
     }
   }, [user]);
+
+  const loadDropdownData = async () => {
+    try {
+      const [cargosRes, shipsRes, portsRes] = await Promise.all([
+        fetchCargo(),
+        fetchShips(),
+        fetchPorts(),
+      ]);
+      setCargoOptions(cargosRes.data);
+      setShipOptions(shipsRes.data);
+      setPortOptions(portsRes.data);
+    } catch (err) {
+      console.error('Error loading dropdown data:', err);
+    }
+  };
 
   const loadShipments = async () => {
     try {
@@ -191,6 +217,8 @@ const ShipmentManagement = () => {
     contactItem: { backgroundColor: '#fff', padding: '1rem', marginBottom: '0.7rem', borderRadius: 6, boxShadow: '0 1px 4px rgba(0,0,0,0.1)', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' },
     contactActions: { display: 'flex', gap: '0.5rem' },
     exportButton: { backgroundColor: '#27ae60', color: 'white', padding: '0.5rem 1.1rem', border: 'none', borderRadius: 4, cursor: 'pointer', fontWeight: '600', fontSize: '1rem' },
+    smallButton: { backgroundColor: '#3498db', color: 'white', padding: '0.3rem 0.6rem', fontSize: '0.85rem', border: 'none', borderRadius: 4, cursor: 'pointer', fontWeight: '500' },
+    dangerButton: { backgroundColor: '#e74c3c', color: 'white', padding: '0.3rem 0.6rem', fontSize: '0.85rem', border: 'none', borderRadius: 4, cursor: 'pointer', fontWeight: '500' }
   };
 
   return (
@@ -224,11 +252,67 @@ const ShipmentManagement = () => {
 
       {/* Form */}
       {isAdmin && showForm && (
-        <form onSubmit={handleSubmit} style={{ marginBottom: '2rem' }}>
-          <input name="cargo" value={formData.cargo} onChange={handleChange} placeholder="Cargo ID" required />
-          <input name="ship" value={formData.ship} onChange={handleChange} placeholder="Ship ID" required />
-          <input name="origin_port" value={formData.origin_port} onChange={handleChange} placeholder="Origin Port ID" required />
-          <input name="destination_port" value={formData.destination_port} onChange={handleChange} placeholder="Destination Port ID" required />
+        <form onSubmit={handleSubmit} style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+          <select
+            name="cargo"
+            value={formData.cargo}
+            onChange={handleChange}
+            required
+            style={styles.select}
+          >
+            <option value="">Select Cargo</option>
+            {cargoOptions.map((cargo) => (
+              <option key={cargo.id} value={cargo.id}>
+                {cargo.name || `Cargo #${cargo.id}`}
+              </option>
+            ))}
+          </select>
+
+          <select
+            name="ship"
+            value={formData.ship}
+            onChange={handleChange}
+            required
+            style={styles.select}
+          >
+            <option value="">Select Ship</option>
+            {shipOptions.map((ship) => (
+              <option key={ship.id} value={ship.id}>
+                {ship.name || `Ship #${ship.id}`}
+              </option>
+            ))}
+          </select>
+
+          <select
+            name="origin_port"
+            value={formData.origin_port}
+            onChange={handleChange}
+            required
+            style={styles.select}
+          >
+            <option value="">Select Origin Port</option>
+            {portOptions.map((port) => (
+              <option key={port.id} value={port.id}>
+                {port.name || `Port #${port.id}`}
+              </option>
+            ))}
+          </select>
+
+          <select
+            name="destination_port"
+            value={formData.destination_port}
+            onChange={handleChange}
+            required
+            style={styles.select}
+          >
+            <option value="">Select Destination Port</option>
+            {portOptions.map((port) => (
+              <option key={port.id} value={port.id}>
+                {port.name || `Port #${port.id}`}
+              </option>
+            ))}
+          </select>
+
           <input type="date" name="departure_date" value={formData.departure_date} onChange={handleChange} required />
           <input type="date" name="arrival_estimate" value={formData.arrival_estimate} onChange={handleChange} required />
           <input type="date" name="actual_arrival_date" value={formData.actual_arrival_date} onChange={handleChange} />
@@ -241,8 +325,8 @@ const ShipmentManagement = () => {
           <label>
             <input type="checkbox" name="is_active" checked={formData.is_active} onChange={handleChange} /> Active
           </label>
-          <button type="submit">{editing ? 'Update' : 'Create'} Shipment</button>
-          <button type="button" onClick={resetForm}>Cancel</button>
+          <button type="submit" style={styles.buttonPrimary}>{editing ? 'Update' : 'Create'} Shipment</button>
+          <button type="button" onClick={resetForm} style={{ ...styles.buttonPrimary, backgroundColor: '#7f8c8d', marginTop: '0.5rem' }}>Cancel</button>
         </form>
       )}
 
@@ -263,8 +347,10 @@ const ShipmentManagement = () => {
             </div>
             {isAdmin && (
               <div style={styles.contactActions}>
-                <button onClick={() => handleEdit(s)}>Edit</button>
-                <button onClick={() => handleToggleActive(s)}>{s.is_active ? 'Deactivate' : 'Activate'}</button>
+                <button style={styles.smallButton} onClick={() => handleEdit(s)}>Edit</button>
+                <button style={styles.dangerButton} onClick={() => handleToggleActive(s)}>
+                  {s.is_active ? 'Deactivate' : 'Activate'}
+                </button>
               </div>
             )}
           </li>
