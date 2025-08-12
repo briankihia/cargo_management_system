@@ -7,9 +7,11 @@ import {
   createCrew,
   updateCrew,
 } from '../api/crew';
+import { fetchShips } from '../api/ships'; // ✅ Import ships API
 
 const CrewManagement = () => {
   const [crewMembers, setCrewMembers] = useState([]);
+  const [ships, setShips] = useState([]); // ✅ Ships state
   const [user, setUser] = useState(null);
   const [selectedRoleFilter, setSelectedRoleFilter] = useState('');
 
@@ -41,6 +43,7 @@ const CrewManagement = () => {
   useEffect(() => {
     if (user) {
       loadCrew();
+      loadShips(); // ✅ Fetch ships too
     }
   }, [user]);
 
@@ -50,6 +53,15 @@ const CrewManagement = () => {
       setCrewMembers(res.data);
     } catch (err) {
       console.error('Error loading crew:', err);
+    }
+  };
+
+  const loadShips = async () => { // ✅ Load all ships
+    try {
+      const res = await fetchShips();
+      setShips(res.data);
+    } catch (err) {
+      console.error('Error loading ships:', err);
     }
   };
 
@@ -63,16 +75,23 @@ const CrewManagement = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // ✅ Ensure ship is integer or null before sending
+    const payload = {
+      ...formData,
+      ship: formData.ship ? parseInt(formData.ship) : null,
+    };
+
     try {
       if (editing) {
-        await updateCrew(formData.id, formData);
+        await updateCrew(formData.id, payload);
       } else {
-        await createCrew(formData);
+        await createCrew(payload);
       }
       loadCrew();
       resetForm();
     } catch (err) {
-      console.error('Error saving crew member:', err);
+      console.error('Error saving crew member:', err.response?.data || err);
     }
   };
 
@@ -265,12 +284,21 @@ const CrewManagement = () => {
             onChange={handleChange}
             placeholder="Nationality"
           />
-          <input
+
+          {/* ✅ Dropdown for ships (IDs only) */}
+          <select
             name="ship"
             value={formData.ship}
             onChange={handleChange}
-            placeholder="Ship ID"
-          />
+          >
+            <option value="">-- Select Ship ID --</option>
+            {ships.map((ship) => (
+              <option key={ship.id} value={ship.id}>
+                {ship.id}
+              </option>
+            ))}
+          </select>
+
           <label>
             <input type="checkbox" name="is_active" checked={formData.is_active} onChange={handleChange} /> Active
           </label>
