@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Ship , Cargo, Crew, Client, Port
+from .models import Ship , Cargo, Crew, Client, Port, Shipment
 
 class ShipSerializer(serializers.ModelSerializer):
     class Meta:
@@ -63,4 +63,10 @@ class ClientSerializer(serializers.ModelSerializer):
 class PortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Port
+        fields = '__all__'
+
+
+class ShipmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Shipment
         fields = '__all__'
