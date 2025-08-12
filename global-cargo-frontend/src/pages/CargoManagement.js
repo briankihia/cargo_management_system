@@ -7,11 +7,13 @@ import {
   createCargo,
   updateCargo,
 } from '../api/cargo';
+import { fetchClients } from '../api/clients'; // ✅ Added import
 
 const CargoManagement = () => {
   const [cargoItems, setCargoItems] = useState([]);
   const [user, setUser] = useState(null);
   const [selectedTypeFilter, setSelectedTypeFilter] = useState('');
+  const [clients, setClients] = useState([]); // ✅ Added state for clients
 
   const [formData, setFormData] = useState({
     id: null,
@@ -40,6 +42,7 @@ const CargoManagement = () => {
   useEffect(() => {
     if (user) {
       loadCargo();
+      loadClients(); // ✅ Fetch clients when user is set
     }
   }, [user]);
 
@@ -49,6 +52,15 @@ const CargoManagement = () => {
       setCargoItems(res.data);
     } catch (err) {
       console.error('Error loading cargo:', err);
+    }
+  };
+
+  const loadClients = async () => {
+    try {
+      const res = await fetchClients();
+      setClients(res.data);
+    } catch (err) {
+      console.error('Error loading clients:', err);
     }
   };
 
@@ -121,7 +133,6 @@ const CargoManagement = () => {
     return true;
   });
 
-  // Export to Excel
   const exportToExcel = () => {
     if (filteredCargo.length === 0) {
       alert('No cargo items to export!');
@@ -144,7 +155,6 @@ const CargoManagement = () => {
     saveAs(blob, 'cargo_export.xlsx');
   };
 
-  // Export to CSV
   const exportToCSV = () => {
     if (filteredCargo.length === 0) {
       alert('No cargo items to export!');
@@ -241,12 +251,20 @@ const CargoManagement = () => {
             onChange={handleChange}
             placeholder="Volume (m³)"
           />
-          <input
+          {/* ✅ Changed Client input to dropdown */}
+          <select
             name="client"
             value={formData.client}
             onChange={handleChange}
-            placeholder="Client ID"
-          />
+            required
+          >
+            <option value="">-- Select Client --</option>
+            {clients.map((client) => (
+              <option key={client.id} value={client.id}>
+                {client.name || `Client ${client.id}`}
+              </option>
+            ))}
+          </select>
           <select name="cargo_type" value={formData.cargo_type} onChange={handleChange} required>
             <option value="perishable">Perishable</option>
             <option value="dangerous">Dangerous</option>
