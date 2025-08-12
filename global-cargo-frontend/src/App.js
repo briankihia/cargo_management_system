@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage/LoginPage";
-// import Layout from './components/Layout';
+import Layout from './components/Layout';
 import ShipManagement from "./pages/ShipManagement"; // Assuming you have a ShipManagement component
 import CargoManagement from "./pages/CargoManagement"; // Assuming you have a CargoManagement component
 import CrewManagement from "./pages/CrewManagement";
@@ -16,15 +16,15 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         {/* Add more routes as needed */}
-        <Route path="/ships" element={<ShipManagement />} />
-        <Route path="/cargo" element={<CargoManagement />} />
+        <Route path="/ships" element={<Layout><ShipManagement /></Layout>} />
+        <Route path="/cargo" element={<Layout><CargoManagement /></Layout>} />
         {/* Add other routes for your application */}
-        <Route path="/crew" element={<CrewManagement />} />
+        <Route path="/crew" element={<Layout><CrewManagement /></Layout>} />
         {/* Add more routes as needed */}
-        <Route path="/ports" element={<PortManagement />} />
+        <Route path="/ports" element={<Layout><PortManagement /></Layout>} />
         {/* Add other routes for your application */}
-        <Route path="/clients" element={<ClientManagement />} />
-        <Route path="/shipments" element={<ShipmentManagement />} />
+        <Route path="/clients" element={<Layout><ClientManagement /></Layout>} />
+        <Route path="/shipments" element={<Layout><ShipmentManagement /></Layout>} />
       </Routes>
     </Router>
   );
