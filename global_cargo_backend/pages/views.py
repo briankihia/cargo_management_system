@@ -1,8 +1,8 @@
 from django.shortcuts import render
 
 from rest_framework import viewsets, filters
-from .models import Ship, Cargo, Crew, Client
-from .serializers import ShipSerializer, CargoSerializer, CrewSerializer, ClientSerializer
+from .models import Ship, Cargo, Crew, Client, Port
+from .serializers import ShipSerializer, CargoSerializer, CrewSerializer, ClientSerializer, PortSerializer
 from rest_framework.permissions import IsAuthenticated
 
 class ShipViewSet(viewsets.ModelViewSet):
@@ -33,3 +33,8 @@ class CrewViewSet(viewsets.ModelViewSet):
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all().order_by('-registered_date')
     serializer_class = ClientSerializer
+
+
+class PortViewSet(viewsets.ModelViewSet):
+    queryset = Port.objects.all()
+    serializer_class = PortSerializer

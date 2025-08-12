@@ -104,3 +104,12 @@ class Client(models.Model):
     def __str__(self):
         return self.company_name
     
+
+class Port(models.Model):
+    port_name = models.CharField(max_length=100)
+    location = models.CharField(max_length=100)
+    capacity = models.IntegerField()
+    contact_email = models.EmailField()
+
+    def __str__(self):
+        return self.port_name

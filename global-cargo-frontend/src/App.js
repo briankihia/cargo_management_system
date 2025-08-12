@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import ShipManagement from "./pages/ShipManagement"; // Assuming you have a ShipManagement component
 import CargoManagement from "./pages/CargoManagement"; // Assuming you have a CargoManagement component
 import CrewManagement from "./pages/CrewManagement";
+import PortManagement from "./pages/PortManagement";
 
 
 function App() {
@@ -17,6 +18,8 @@ function App() {
         <Route path="/cargo" element={<CargoManagement />} />
         {/* Add other routes for your application */}
         <Route path="/crew" element={<CrewManagement />} />
+        {/* Add more routes as needed */}
+        <Route path="/ports" element={<PortManagement />} />
       </Routes>
     </Router>
   );
