@@ -6,6 +6,7 @@ import ShipManagement from "./pages/ShipManagement"; // Assuming you have a Ship
 import CargoManagement from "./pages/CargoManagement"; // Assuming you have a CargoManagement component
 import CrewManagement from "./pages/CrewManagement";
 import PortManagement from "./pages/PortManagement";
+import ClientManagement from "./pages/ClientManagement"; // Assuming you have a ClientManagement component
 
 
 function App() {
@@ -20,6 +21,8 @@ function App() {
         <Route path="/crew" element={<CrewManagement />} />
         {/* Add more routes as needed */}
         <Route path="/ports" element={<PortManagement />} />
+        {/* Add other routes for your application */}
+        <Route path="/clients" element={<ClientManagement />} />
       </Routes>
     </Router>
   );
