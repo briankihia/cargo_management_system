@@ -31,16 +31,27 @@ const Navbar = () => {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          Contact Directory
+          Cargo Management System
         </Typography>
-        <Button color="inherit" onClick={() => navigate('/organizations')}>Organizations</Button>
-        <Button color="inherit" onClick={() => navigate('/contacts')}>Contacts</Button>
 
-        {/* Admin-only Industries button */}
+        {/* Common Links */}
+        <Button color="inherit" onClick={() => navigate('/dashboard')}>Dashboard</Button>
+        <Button color="inherit" onClick={() => navigate('/crew')}>Crew</Button>
+        <Button color="inherit" onClick={() => navigate('/ports')}>Ports</Button>
+        <Button color="inherit" onClick={() => navigate('/ships')}>Ships</Button>
+        <Button color="inherit" onClick={() => navigate('/cargo')}>Cargo</Button>
+        <Button color="inherit" onClick={() => navigate('/shipments')}>Shipments</Button>
+        <Button color="inherit" onClick={() => navigate('/clients')}>Clients</Button>
+
+        {/* Admin-only Links */}
         {isAdmin && (
-          <Button color="inherit" onClick={() => navigate('/industries')}>Industries</Button>
+          <>
+            {/* <Button color="inherit" onClick={() => navigate('/admin-dashboard')}>Admin Dashboard</Button> */}
+            {/* <Button color="inherit" onClick={() => navigate('/users')}>Manage Users</Button> */}
+          </>
         )}
 
+        {/* Logout */}
         <Button color="inherit" onClick={logout}>Logout</Button>
       </Toolbar>
     </AppBar>
