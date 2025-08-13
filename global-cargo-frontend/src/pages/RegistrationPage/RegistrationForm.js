@@ -37,7 +37,7 @@ function Registrationform() {
       const data = await response.json();
       localStorage.setItem('token', data.token); // Save JWT token
       alert('Registration successful!');
-      navigate('/login'); // Redirect to login page
+      navigate('/'); // Redirect to login page
     } catch (err) {
       setError(err.message);
     }

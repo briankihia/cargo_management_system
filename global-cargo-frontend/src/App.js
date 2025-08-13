@@ -9,6 +9,7 @@ import PortManagement from "./pages/PortManagement";
 import ClientManagement from "./pages/ClientManagement"; // Assuming you have a ClientManagement component
 import ShipmentManagement from "./pages/ShipmentManagement"; // Assuming you have a ShipmentManagement component
 import Dashboard from "./pages/Dashboard";
+import RegistrationPage from "./pages/RegistrationPage/RegistrationPage"; // Assuming you have a RegistrationPage component
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/register" element={<RegistrationPage />} />
         {/* Add more routes as needed */}
         <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
         <Route path="/ships" element={<Layout><ShipManagement /></Layout>} />
