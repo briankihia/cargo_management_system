@@ -104,7 +104,7 @@ function LoginForm() {
         <button type="submit" className="login-button">LOGIN</button>
       </form>
       <div className="signup-link">
-        <a href="/signup">
+        <a href="/register">
           <span>Sign up</span>
         </a>
       </div>
