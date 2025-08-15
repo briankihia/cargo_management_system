@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { AppBar, Toolbar, Typography, Button } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, useMediaQuery } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useTheme } from '@mui/material/styles';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const theme = useTheme();
+  const isMobileOrTablet = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
     const session = JSON.parse(localStorage.getItem('session'));
@@ -27,6 +33,25 @@ const Navbar = () => {
 
   const isAdmin = user?.role?.toLowerCase() === 'admin';
 
+  // Menu open/close handlers
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  // Common menu items
+  const menuItems = [
+    { label: 'Dashboard', path: '/dashboard' },
+    { label: 'Crew', path: '/crew' },
+    { label: 'Ports', path: '/ports' },
+    { label: 'Ships', path: '/ships' },
+    { label: 'Cargo', path: '/cargo' },
+    { label: 'Shipments', path: '/shipments' },
+    { label: 'Clients', path: '/clients' },
+  ];
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -34,25 +59,66 @@ const Navbar = () => {
           Cargo Management System
         </Typography>
 
-        {/* Common Links */}
-        <Button color="inherit" onClick={() => navigate('/dashboard')}>Dashboard</Button>
-        <Button color="inherit" onClick={() => navigate('/crew')}>Crew</Button>
-        <Button color="inherit" onClick={() => navigate('/ports')}>Ports</Button>
-        <Button color="inherit" onClick={() => navigate('/ships')}>Ships</Button>
-        <Button color="inherit" onClick={() => navigate('/cargo')}>Cargo</Button>
-        <Button color="inherit" onClick={() => navigate('/shipments')}>Shipments</Button>
-        <Button color="inherit" onClick={() => navigate('/clients')}>Clients</Button>
-
-        {/* Admin-only Links */}
-        {isAdmin && (
+        {/* Mobile & Tablet View */}
+        {isMobileOrTablet ? (
           <>
-            {/* <Button color="inherit" onClick={() => navigate('/admin-dashboard')}>Admin Dashboard</Button> */}
-            {/* <Button color="inherit" onClick={() => navigate('/users')}>Manage Users</Button> */}
+            <IconButton color="inherit" onClick={handleMenuOpen}>
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+            >
+              {menuItems.map((item) => (
+                <MenuItem
+                  key={item.path}
+                  onClick={() => {
+                    navigate(item.path);
+                    handleMenuClose();
+                  }}
+                >
+                  {item.label}
+                </MenuItem>
+              ))}
+              {isAdmin && (
+                <>
+                  {/* Uncomment if you want admin-only menu items */}
+                  {/* <MenuItem onClick={() => navigate('/admin-dashboard')}>Admin Dashboard</MenuItem> */}
+                  {/* <MenuItem onClick={() => navigate('/users')}>Manage Users</MenuItem> */}
+                </>
+              )}
+              <MenuItem
+                onClick={() => {
+                  logout();
+                  handleMenuClose();
+                }}
+              >
+                Logout
+              </MenuItem>
+            </Menu>
+          </>
+        ) : (
+          /* Desktop View */
+          <>
+            {menuItems.map((item) => (
+              <Button
+                key={item.path}
+                color="inherit"
+                onClick={() => navigate(item.path)}
+              >
+                {item.label}
+              </Button>
+            ))}
+            {isAdmin && (
+              <>
+                {/* <Button color="inherit" onClick={() => navigate('/admin-dashboard')}>Admin Dashboard</Button> */}
+                {/* <Button color="inherit" onClick={() => navigate('/users')}>Manage Users</Button> */}
+              </>
+            )}
+            <Button color="inherit" onClick={logout}>Logout</Button>
           </>
         )}
-
-        {/* Logout */}
-        <Button color="inherit" onClick={logout}>Logout</Button>
       </Toolbar>
     </AppBar>
   );
